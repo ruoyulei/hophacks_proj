@@ -5,8 +5,9 @@ import subprocess
 #f = open('/dev/null', 'w')
 
 #print "hello"
-str = "youtube-dl http://www.youtube.com/watch?v=OC83NA5tAGE -qo - | mplayer -monitorpixelaspect 0.5 -"
-subprocess.call(str, shell=True)
+def watch_video():
+	str = "youtube-dl http://www.youtube.com/watch?v=OC83NA5tAGE -qo - | mplayer -monitorpixelaspect 0.5 -"
+	subprocess.call(str, shell=True)
 
 
 

@@ -4,6 +4,7 @@ import cookielib
 import lxml
 import string
 import requests
+import subprocess
 
 s = set([''])
 limit = 90
@@ -43,13 +44,19 @@ def main():
 		elif str(typein).lower()[:5] == "watch" and str(typein)[5] == " ":
 			if len(typein) == 7:
 				print "watching",typein[6]
-				break
+				watch_video()
+				#break
 			elif len(typein) == 8:
 				print "watching",int(typein[6]+typein[7])
-				break
+				watch_video()
+				#break
 		else:
 			print 'invalid command'
 			break
+
+def watch_video():
+	subprocess.call(["bash","a.sh","_Yhyp-_hX2s","&>","/dev/null"])
+	#subprocess.call(str, shell=True)
 
 def get_soup(html_doc):
 	return BeautifulSoup(html_doc, 'lxml')
