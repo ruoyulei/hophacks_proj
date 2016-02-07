@@ -1,4 +1,10 @@
-import speech
+import pyttsx
+import sys
 
-a = speech.speech()
-a.read("We have nothing interesting to share. L O L. Just kidding.")
+text = sys.argv[1]
+
+engine = pyttsx.init()
+rate = engine.getProperty('rate')
+engine.setProperty('rate', rate-50)
+engine.say(text)
+engine.runAndWait()

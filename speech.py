@@ -10,5 +10,6 @@ class speech:
 
 	def read(self,text):
 		self.engine.say(text)
-		time.sleep(1)
 		self.engine.runAndWait()
+		# time.sleep(2)
+#Sadness sings Adele - Hello "La Voz MMD" | Blind Auditions (eng sub)

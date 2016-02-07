@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from bs4 import BeautifulSoup
 import urllib2
 import cookielib
@@ -6,15 +7,21 @@ import string
 import requests
 import subprocess
 import youtube_v
+import speech
+import pyttsx
+import process_call
 
 s = set([''])
 limit = 90
-# global arr
 arr = []
 short_page_number = 0
+#speaker = speech.speech()
+engine = pyttsx.init()
 
 def main():
+	process_call.read_text("Welcome to Soundi. What would you like to search?")
 	print 'What do you want to search?'
+
 	init = raw_input()
 	init = string.replace(init, ' ', '+')
 	init_url = 'https://www.youtube.com/results?search_query='+init+'&page='
@@ -31,6 +38,8 @@ def main():
 
 	addition = 0
 	while(True):
+		process_call.read_text("You are currently on page "+str(short_page_number + addition))
+		process_call.read_text("Videos on this page are  ")
 		print_list(short_page_number + addition)
 		'''
 		url = init_url + page_number
@@ -50,7 +59,8 @@ def main():
 			temp_set.add(n)
 		print '\nenter a page number or \'leave\': '
 		'''
-		print '\n Press N or P or \'leave\': '
+		process_call.read_text("Press N for next page, P for previous page, or Q to quit")
+		print '\nPress N or P or Q: '
 		typein = raw_input()
 		'''
 		if str(typein).isdigit():
@@ -61,7 +71,7 @@ def main():
 				print 'invalid number'
 				break
 		'''
-		if str(typein).lower() == "leave":
+		if str(typein).lower() == "q":
 			break
 		elif str(typein).lower()[:1] == "w" and str(typein)[1] == " ":
 			if len(typein) == 3:
@@ -87,7 +97,20 @@ def chunks(arr,number):
 
 def print_list(num):
 	for i in range(0,len(arr[num])):
+		'''
+		arr[num][i].title = arr[num][i].title.replace('«','')
+		arr[num][i].title = arr[num][i].title.replace('»','')
+		arr[num][i].title = arr[num][i].title.replace('–','')
+		'''
 		print (str(i)+".").ljust(3) ,arr[num][i].title
+		process_call.read_text(str(i))
+		temp_str = ""
+		for character in arr[num][i].title:
+			if ord(character) not in range(48,57) and ord(character) not in range(65,90) and ord(character) not in range(97,122):
+				temp_str+=" "
+			else:
+				temp_str+=character
+		process_call.read_text(temp_str)
 
 def watch_video(curr_page,num):
 	v_id = arr[curr_page][num].id

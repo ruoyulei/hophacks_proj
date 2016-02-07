@@ -1,4 +1,4 @@
-import urllib
+wimport urllib
 import sys
 # http://www.karoltomala.com/blog/?p=592
 

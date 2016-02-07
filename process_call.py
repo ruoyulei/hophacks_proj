@@ -1,25 +1,13 @@
-import sys
-import os
 import subprocess
 
-#f = open('/dev/null', 'w')
+def read_text(text):
+	subprocess.call(["python","sp_scr.py",text])
+"""
+def main():
+	read_text("hello world")
+	read_text("this is the second one")
+	read_text("and this is the third")
 
-#print "hello"
-def watch_video():
-	str = "youtube-dl http://www.youtube.com/watch?v=OC83NA5tAGE -qo - | mplayer -monitorpixelaspect 0.5 -"
-	subprocess.call(str, shell=True)
-
-
-
-
-#str2 = "youtube-dl http://www.youtube.com/watch?v=OC83NA5tAGE -o - | mplayer -monitorpixelaspect 0.5 - &> /dev/null"
-
-#arr = ["youtube-dl", "http://www.youtube.com/watch?v=BJ0xBCwkg3E", "-wio", "-", "|", "mplayer", "-vo", "-monitorpixelaspect", "0.5", "-"]
-
-#call(arr)
-
-
-
-#ps = subprocess.Popen(("youtube-dl", "http://www.youtube.com/watch?v=BJ0xBCwkg3E", "-o", "-"), stdout=subprocess.PIPE)
-#output = subprocess.check_output(("mplayer", "-vo", "-monitorpixelaspect", "0.5", "-"), stdin=ps.stdout)
-#ps.wait()
+if __name__ == '__main__':
+	main()
+"""
