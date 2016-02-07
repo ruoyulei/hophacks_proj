@@ -17,13 +17,30 @@ arr = []
 short_page_number = 1
 engine = pyttsx.init()
 
+# screen
+screen = curses.initscr() 
+curses.noecho() 
+curses.curs_set(0) 
+screen.keypad(1)
+y,x = screen.getmaxyx()
+
 
 def main():
+	# event = screen.getch()
 	page_reenter = False
 	process_call.read_text("Welcome to Soundi. What would you like to search?")
-	print 'What do you want to search?'
+	screen.addstr(0,10,"Welcome to Soundi. What would you like to search?", curses.A_REVERSE)
+	# print 'What do you want to search?'
 
-	init = raw_input()
+	screen.move(y -1,0)
+   	screen.insdelln(1)
+   	screen.insdelln(2)
+   	screen.addstr(">")
+   	curses.echo() 
+   	screen.refresh()
+   	init = screen.getstr(y-1, 1, 20)
+
+	# init = raw_input()
 	init = string.replace(init, ' ', '+')
 	init_url = 'https://www.youtube.com/results?search_query='+init+'&page='
 	page_number = 1
@@ -43,35 +60,46 @@ def main():
 			process_call.read_text("You are currently on page "+str(short_page_number + addition))
 			process_call.read_text("Videos on this page are  ")
 			print_list(short_page_number + addition)
-			page_reenter = True
+			# page_reenter = True
 
 		process_call.read_text("Press W to watch video, N for next page, P for previous page, or Q to quit")
-		print '\nPress N, P or Q: '
-		typein = raw_input()
+		# print '\nPress N, P or Q: '
+		screen.move(y -3,0)
+		screen.addstr("Press W to watch video, N for next page, P for previous page, or Q to quit")
+		# typein = raw_input()
+		typein = screen.getch()
 		
-		if str(typein).lower() == "q":
+		if typein == ord("q"):
 			process_call.read_text("Thanks for using. Have a nice day")
-			print 'Thanks for using. Have a nice day'
+			# print 'Thanks for using. Have a nice day'
 			break
-		elif str(typein).lower()[:1] == "w" and str(typein)[1] == " ":
-			if len(typein) == 3:
-				# print "watching",typein[2]
-				watch_video(short_page_number + addition, int(typein[2]))
-				page_reenter = True
-				#break
-			elif len(typein) == 4:
-				# print "watching",int(typein[2]+typein[3])
-				watch_video(short_page_number + addition,int(typein[2]+typein[3]))
-				page_reenter = True
-				#break
-		elif str(typein).lower()[:1] == "n":
+		elif typein == ord("w"): # and str(typein)[1] == " ":
+			screen.move(y -1,0)
+		   	screen.insdelln(1)
+		   	screen.insdelln(2)
+		   	screen.addstr(">")
+		   	curses.echo() 
+		   	screen.refresh()
+		   	event = screen.getstr(y-1, 1)
+		   	screen.insdelln(1)
+   	  		screen.insdelln(2)
+   	  		screen.move(y -1,0)
+   	  		screen.addstr(">")
+
+			watch_video(short_page_number + addition,int(event))
+			page_reenter = True
+			#break
+		elif typein == ord("n") or typein == ord("N"):
 			addition = addition + 1
-		elif str(typein).lower()[:1] == "p":
+
+		elif typein == ord("p") or typein == ord("P"):
 			if short_page_number + addition > 1:
 				addition = addition - 1
 		else:
 			print 'invalid command'
 			break
+	curses.endwin()
+
 
 def chunks(arr,number):
 	for i in xrange(0,len(arr), number):
@@ -85,9 +113,20 @@ def print_list(num):
 	else:
 		top = len(arr)
 
+	screen.erase()
+	screen.addstr(0,10,"Please enjoy using it!", curses.A_REVERSE)
+
+	current = 3
+	screen.move(current,0)
+
+
 	counter = 1
 	for i in range(bottom,top):
-		print (str(counter)+".").ljust(3),arr[i].title
+		# print (str(counter)+".").ljust(3),arr[i].title
+		
+		current = current + 3
+		screen.addstr((str(counter)+".").ljust(3)+" "+arr[i].title)
+		screen.move(current,0)
 		process_call.read_text(str(counter))
 		temp_str = ""
 		for character in arr[i].title:

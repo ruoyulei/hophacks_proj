@@ -26,6 +26,7 @@ def my_raw_input(screen, r, c, prompt_string):
 
 while True: 
    event = screen.getch() 
+   screen.insdelln(1)
    if event == ord("q"): break
    elif event == ord("w"):
    	  screen.move(y -1,0)
@@ -34,7 +35,9 @@ while True:
    	  screen.addstr(">")
    	  curses.echo() 
    	  screen.refresh()
-   	  input = screen.getstr(y-1, 1, 20)
+   	  input = screen.getstr(y-1, 1)
+   	  screen.insdelln(1)
+   	  screen.insdelln(2)
    	  screen.addstr(input)
 	  # choice = my_raw_input(screen, y-1, 0, "cool or hot?\n>").lower()
    elif event == ord("p"): 
