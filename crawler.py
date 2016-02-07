@@ -7,18 +7,18 @@ import string
 import requests
 import subprocess
 import youtube_v
-import speech
 import pyttsx
 import process_call
 
 s = set([''])
 limit = 90
 arr = []
-short_page_number = 0
-#speaker = speech.speech()
+short_page_number = 1
 engine = pyttsx.init()
 
+
 def main():
+	page_reenter = False
 	process_call.read_text("Welcome to Soundi. What would you like to search?")
 	print 'What do you want to search?'
 
@@ -38,9 +38,12 @@ def main():
 
 	addition = 0
 	while(True):
-		process_call.read_text("You are currently on page "+str(short_page_number + addition))
-		process_call.read_text("Videos on this page are  ")
-		print_list(short_page_number + addition)
+		if page_reenter == False:
+			process_call.read_text("You are currently on page "+str(short_page_number + addition))
+			process_call.read_text("Videos on this page are  ")
+			print_list(short_page_number + addition)
+			page_reenter = True
+
 		'''
 		url = init_url + page_number
 		s.add(url)
@@ -59,8 +62,8 @@ def main():
 			temp_set.add(n)
 		print '\nenter a page number or \'leave\': '
 		'''
-		process_call.read_text("Press N for next page, P for previous page, or Q to quit")
-		print '\nPress N or P or Q: '
+		process_call.read_text("Press W to watch video, N for next page, P for previous page, or Q to quit")
+		print '\nPress N, P or Q: '
 		typein = raw_input()
 		'''
 		if str(typein).isdigit():
@@ -72,20 +75,24 @@ def main():
 				break
 		'''
 		if str(typein).lower() == "q":
+			process_call.read_text("Thanks for using. Have a nice day")
+			print 'Thanks for using. Have a nice day'
 			break
 		elif str(typein).lower()[:1] == "w" and str(typein)[1] == " ":
 			if len(typein) == 3:
 				# print "watching",typein[2]
 				watch_video(short_page_number + addition, int(typein[2]))
+				page_reenter = True
 				#break
 			elif len(typein) == 4:
 				# print "watching",int(typein[2]+typein[3])
 				watch_video(short_page_number + addition,int(typein[2]+typein[3]))
+				page_reenter = True
 				#break
 		elif str(typein).lower()[:1] == "n":
 			addition = addition + 1
 		elif str(typein).lower()[:1] == "p":
-			if short_page_number + addition > 0:
+			if short_page_number + addition > 1:
 				addition = addition - 1
 		else:
 			print 'invalid command'
@@ -96,24 +103,28 @@ def chunks(arr,number):
 		yield arr[i:i+number]
 
 def print_list(num):
-	for i in range(0,len(arr[num])):
-		'''
-		arr[num][i].title = arr[num][i].title.replace('«','')
-		arr[num][i].title = arr[num][i].title.replace('»','')
-		arr[num][i].title = arr[num][i].title.replace('–','')
-		'''
-		print (str(i)+".").ljust(3) ,arr[num][i].title
-		process_call.read_text(str(i))
+	bottom = (num - 1) * 5
+	top = 1
+	if (num * 5 -1) < len(arr):
+		top = num * 5
+	else:
+		top = len(arr)
+
+	counter = 1
+	for i in range(bottom,top):
+		print (str(counter)+".").ljust(3),arr[i].title
+		process_call.read_text(str(counter))
 		temp_str = ""
-		for character in arr[num][i].title:
+		for character in arr[i].title:
 			if ord(character) not in range(48,57) and ord(character) not in range(65,90) and ord(character) not in range(97,122):
 				temp_str+=" "
 			else:
 				temp_str+=character
 		process_call.read_text(temp_str)
+		counter = counter + 1
 
 def watch_video(curr_page,num):
-	v_id = arr[curr_page][num].id
+	v_id = arr[curr_page*5 - 6 + num].id
 	subprocess.call(["bash","a.sh",v_id,"&>","/dev/null"])
 	#subprocess.call(str, shell=True)
 
@@ -203,9 +214,10 @@ def crawler2(soup):
 			# print "   "+duration,"|",y_id
 		a = youtube_v.youtube_v()
 		a.make_instance(title,y_id)
-		sub_set.append(a)
+		# sub_set.append(a)
 		#index = index + 1
-	arr.append(sub_set)
+		arr.append(a)
+	#arr.append(sub_set)
 
 def pull_webpage(url):
 	# requests.get(address)
